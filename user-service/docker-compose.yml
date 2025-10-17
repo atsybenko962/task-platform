@@ -1,12 +1,15 @@
-services:
+networks:
+  platform_network:
+    driver: bridge
 
+services:
   user_db:
     container_name: user_db
     restart: always
     image: postgres:15-alpine
     environment:
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
     env_file:
       - .env
@@ -34,6 +37,6 @@ services:
     env_file:
       - ./.env
     depends_on:
-      - orders_db
+      - user_db
     networks:
-      - market_network
+      - platform_network
