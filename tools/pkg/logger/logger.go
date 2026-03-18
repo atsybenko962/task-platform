@@ -1,7 +1,6 @@
 package logger
 
 import (
-	"auth/internal/config"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
@@ -17,7 +16,12 @@ const (
 	Fatal  = "fatal"
 )
 
-func NewLogger(conf config.Config, sync zapcore.WriteSyncer) *zap.Logger {
+type Config struct {
+	AppName  string
+	LogLevel string
+}
+
+func NewLogger(conf Config, sync zapcore.WriteSyncer) *zap.Logger {
 	levels := map[string]zapcore.Level{
 		Debug:  zapcore.DebugLevel,
 		Info:   zapcore.InfoLevel,

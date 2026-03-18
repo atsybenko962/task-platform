@@ -6,8 +6,8 @@ replace github.com/fin/tools => ../tools
 
 require (
 	github.com/fin/tools v0.0.0-00010101000000-000000000000
-	go.uber.org/zap v1.27.0
 	github.com/lib/pq v1.10.9
+	go.uber.org/zap v1.27.1
 )
 
 require (
