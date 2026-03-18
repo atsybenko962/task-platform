@@ -1,0 +1,86 @@
+syntax = "proto3";
+
+package auth;
+
+option go_package = "github.com/fin/tools/gen/go/auth;auth";
+
+// ===============================
+//        AUTH SERVICE API
+// ===============================
+
+service AuthService {
+  // Регистрация нового пользователя
+  rpc Register(RegisterRequest) returns (RegisterResponse);
+
+  // Логин: проверка логина/пароля и выдача токенов
+  rpc Login(LoginRequest) returns (LoginResponse);
+
+  // Проверка access токена (обычно вызывается API Gateway)
+  rpc Validate(ValidateRequest) returns (ValidateResponse);
+
+  // Обновление access токена по refresh токену
+  rpc Refresh(RefreshRequest) returns (RefreshResponse);
+}
+
+// ===============================
+//            MESSAGES
+// ===============================
+
+// ---------- Register ----------
+message RegisterRequest {
+  string email = 1;
+  string password = 2;
+  string username = 3;
+}
+
+message RegisterResponse {
+  User user = 1;
+}
+
+// ---------- Login ----------
+message LoginRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  Tokens tokens = 1;
+  User user = 2;
+}
+
+// ---------- Validate ----------
+message ValidateRequest {
+  string access_token = 1;
+}
+
+message ValidateResponse {
+  bool valid = 1;
+  string user_id = 2;
+  repeated string roles = 3;
+}
+
+// ---------- Refresh ----------
+message RefreshRequest {
+  string refresh_token = 1;
+}
+
+message RefreshResponse {
+  Tokens tokens = 1;
+}
+
+// ===============================
+//        COMMON STRUCTURES
+// ===============================
+
+message User {
+  string id = 1;
+  string email = 2;
+  string username = 3;
+  int64 created_at = 4;
+}
+
+message Tokens {
+  string access_token = 1;
+  string refresh_token = 2;
+  int64 expires_in = 3; // unix timestamp
+}

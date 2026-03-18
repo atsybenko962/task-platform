@@ -1,6 +1,6 @@
 package config
 
-import "github.com/fin/tools/configcore"
+import "github.com/fin/tools/pkg/configcore"
 
 // Config конфигурация сервиса авторизации
 type Config struct {

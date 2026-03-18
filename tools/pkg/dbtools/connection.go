@@ -2,7 +2,7 @@ package dbtools
 
 import (
 	"context"
-	errors "github.com/fin/tools/helpers"
+	errors "github.com/fin/tools/pkg/helpers"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
