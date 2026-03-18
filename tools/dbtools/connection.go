@@ -2,8 +2,8 @@ package dbtools
 
 import (
 	"context"
+	errors "github.com/fin/tools/helpers"
 	"github.com/jackc/pgx/v5/pgxpool"
-	errors "github.com/task_platform/tools/helpers"
 )
 
 // NewClient initializes the database connection pool.
