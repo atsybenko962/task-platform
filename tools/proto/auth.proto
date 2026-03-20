@@ -2,85 +2,35 @@ syntax = "proto3";
 
 package auth;
 
-option go_package = "github.com/fin/tools/gen/go/auth;auth";
+option go_package = "github.com/fin/tools/gen/auth;auth";
 
-// ===============================
-//        AUTH SERVICE API
-// ===============================
-
-service AuthService {
-  // Регистрация нового пользователя
-  rpc Register(RegisterRequest) returns (RegisterResponse);
-
-  // Логин: проверка логина/пароля и выдача токенов
-  rpc Login(LoginRequest) returns (LoginResponse);
-
-  // Проверка access токена (обычно вызывается API Gateway)
-  rpc Validate(ValidateRequest) returns (ValidateResponse);
-
-  // Обновление access токена по refresh токену
-  rpc Refresh(RefreshRequest) returns (RefreshResponse);
+service Auth {
+  // Register registers a new user.
+  rpc Register (RegisterRequest) returns (RegisterResponse);
+  // Login logs in a user and returns an auth token.
+  rpc Login (LoginRequest) returns (LoginResponse);
 }
 
-// ===============================
-//            MESSAGES
-// ===============================
-
-// ---------- Register ----------
+// Объект, который отправляется при вызове RPC-метода (ручки) Register.
 message RegisterRequest {
-  string email = 1;
-  string password = 2;
-  string username = 3;
+  string email = 1; // Email of the user to register.
+  string password = 2; // Password of the user to register.
 }
 
+// Объект, который метод (ручка) вернёт.
 message RegisterResponse {
-  User user = 1;
+  int64 user_id = 1; // User ID of the registered user.
 }
 
-// ---------- Login ----------
+// То же самое для метода Login()
 message LoginRequest {
-  string email = 1;
-  string password = 2;
+  string email = 1; // Email of the user to login.
+  string password = 2; // Password of the user to login.
+  int32 app_id = 3; // ID of the app to login to.
 }
 
 message LoginResponse {
-  Tokens tokens = 1;
-  User user = 2;
+  string token = 1; // Auth token of the logged in user.
 }
 
-// ---------- Validate ----------
-message ValidateRequest {
-  string access_token = 1;
-}
 
-message ValidateResponse {
-  bool valid = 1;
-  string user_id = 2;
-  repeated string roles = 3;
-}
-
-// ---------- Refresh ----------
-message RefreshRequest {
-  string refresh_token = 1;
-}
-
-message RefreshResponse {
-  Tokens tokens = 1;
-}
-
-// ===============================
-//        COMMON STRUCTURES
-// ===============================
-
-message User {
-  string id = 1;
-  string email = 2;
-  string username = 3;
-  int64 created_at = 4;
-}
-
-message Tokens {
-  string access_token = 1;
-  string refresh_token = 2;
-  int64 expires_in = 3; // unix timestamp
-}

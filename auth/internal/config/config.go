@@ -1,13 +1,28 @@
 package config
 
-import "github.com/fin/tools/pkg/configcore"
+import (
+	"github.com/fin/tools/pkg/configcore"
+	"time"
+)
 
-// Config конфигурация сервиса авторизации
 type Config struct {
-	AppName               string `envconfig:"APP_NAME"`
-	AppDebug              bool   `envconfig:"APP_DEBUG"`
-	CatalogServerConfig   configcore.ServerConfig
-	DatabaseURI           string `envconfig:"DATABASE_URI"`
-	LogLevel              string `envconfig:"LOG_LEVEL" default:"info"`
-	ObservabilitySettings configcore.Observer
+	Env            string        `yaml:"env" env-default:"local"`
+	StoragePath    string        `yaml:"storage_path" env-required:"true"`
+	GRPC           GRPCConfig    `yaml:"grpc"`
+	MigrationsPath string
+	TokenTTL       time.Duration `yaml:"token_ttl" env-default:"1h"`
+	LogLevel       string        `yaml:"log_level" env-default:"info"`
+}
+
+type GRPCConfig struct {
+	Port    int           `yaml:"port"`
+	Timeout time.Duration `yaml:"timeout"`
+}
+
+func MustLoad(path string) (*Config, error) {
+	var cfg Config
+	if err := configcore.MustLoad(&cfg, path); err != nil {
+		return nil, err
+	}
+	return &cfg, nil
 }
